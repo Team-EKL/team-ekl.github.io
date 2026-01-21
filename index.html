@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Team EKL</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fff9f4; --card:#fffdf9; --ink:#3b2f2f; --muted:#7a5e57;
+    --accent:#c37b6b; --accent-2:#b8cbb8; --accent-3:#d6a571; --accent-4:#c9b6e4;
+    --ring:rgba(195,123,107,.35); --shadow:0 10px 30px rgba(59,47,47,.12); --radius:18px;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Quicksand',system-ui,Segoe UI,Roboto,sans-serif;
+    line-height:1.45;overflow-x:hidden
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(1100px 500px at -10% -10%, rgba(195,123,107,.12), transparent 70%),
+      radial-gradient(1100px 600px at 110% 110%, rgba(200,180,170,.15), transparent 70%),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" opacity=".12"><defs><pattern id="p" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M30 0 L60 30 L30 60 L0 30 Z" fill="none" stroke="%237a5e57" stroke-width="1"/><circle cx="30" cy="30" r="3" fill="%23c37b6b"/></pattern></defs><rect width="100%" height="100%" fill="url(%23p)"/></svg>');
+    background-size: cover, cover, 180px 180px;
+  }
+
+  header{padding:clamp(18px,2.5vw,28px) 20px 10px;}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .logo{
+    width:56px;height:56px;border-radius:50%;
+    background:conic-gradient(from 220deg,var(--accent),var(--accent-3),var(--accent-2),var(--accent-4),var(--accent));
+    box-shadow:var(--shadow);position:relative
+  }
+  .logo::after{
+    content:"✺";position:absolute;inset:0;display:grid;place-items:center;
+    font-size:28px;color:#fffdf9;filter:drop-shadow(0 1px 0 rgba(0,0,0,.15))
+  }
+  h1{font-family:'Playfair Display',serif;margin:0;font-weight:700}
+  .tag{margin-top:2px;color:var(--muted);font-size:.95rem}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:10px 20px 40px;display:grid;gap:22px;grid-template-columns:1fr}
+  .card{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    border:1px solid rgba(59,47,47,.06);overflow:clip
+  }
+
+  .flyer{padding:16px}
+  .gallery-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 6px 4px;
+  }
+  .title-block{display:flex;flex-direction:column;gap:2px}
+  .section-title{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(20px,2.2vw,26px);margin:0;
+  }
+  .sub{color:var(--muted);font-size:.95rem}
+
+  .nav-btns{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 14px;border-radius:999px;border:1px solid rgba(59,47,47,.12);
+    background:#fff;color:var(--ink);text-decoration:none;font-weight:800;
+    box-shadow:0 6px 16px rgba(59,47,47,.08);
+    cursor:pointer;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--accent-2),var(--accent-4))}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .dots{
+    display:flex;gap:8px;align-items:center;justify-content:center;
+    padding:10px 0 0;flex-wrap:wrap;
+  }
+  .dot{
+    width:10px;height:10px;border-radius:999px;
+    border:2px solid rgba(122,94,87,.55);
+    background:transparent;cursor:pointer;
+  }
+  .dot.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    box-shadow:0 0 0 6px rgba(195,123,107,.15);
+  }
+
+  .frame{
+    width:100%;
+    border-radius:16px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(59,47,47,.08);
+    margin-top:12px;
+    display:grid;
+    place-items:center;
+  }
+  .frame-inner{
+    width:100%;
+    min-height:min(82vh, 950px);
+    display:grid;
+    place-items:center;
+    padding:10px;
+  }
+  #flyerImg{
+    max-width:100%;
+    max-height:min(82vh, 950px);
+    width:auto;height:auto;
+    display:block;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+  }
+  .error{
+    padding:18px;
+    color:var(--muted);
+    background:#fff;
+    border-radius:14px;
+    border:1px dashed rgba(59,47,47,.18);
+    margin:10px;
+  }
+
+  #confetti,#sparkles{position:fixed;inset:0;pointer-events:none;z-index:50}
+  .confetti-trigger{
+    position:fixed;right:18px;bottom:18px;z-index:60;display:flex;align-items:center;gap:10px;
+    padding:12px 16px;border-radius:999px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--accent-3),var(--accent));color:#fff;font-weight:800;letter-spacing:.2px;
+    box-shadow:0 16px 40px rgba(211,150,80,.35), inset 0 0 0 2px rgba(255,255,255,.35)
+  }
+
+  .card.flyer{
+  width: min(92vw, 820px);
+  margin: 0 auto;
+}
+
+  #nextBtn,
+  #openImg {
+    display: none !important;
+  }
+</style>
+</head>
+
+<body>
+  <canvas id="confetti"></canvas>
+  <canvas id="sparkles"></canvas>
+
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Team EKL</h1>
+        <div class="tag"><i>Unerwartet Gut</i></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card flyer" aria-label="Flyer gallery">
+      <div class="gallery-bar">
+        <div class="title-block">
+          <div class="section-title">Our Fine Extravaganza Events</div>
+          <div class="sub" id="flyerMeta">Loading…</div>
+        </div>
+
+        <div class="nav-btns">
+          <button class="btn" id="prevBtn" type="button" aria-label="Previous flyer">⟵ Previous Events</button>
+          <button class="btn" id="nextBtn" type="button" aria-label="Next flyer">Next ⟶</button>
+          <a class="btn primary" id="openImg" href="#" target="_blank" rel="noopener">Open PNG</a>
+        </div>
+      </div>
+
+      <div class="dots" id="dots" aria-label="Flyer selector"></div>
+
+      <div class="frame">
+        <div class="frame-inner" id="viewerArea">
+          <img id="flyerImg" alt="Flyer" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button class="confetti-trigger" id="confettiBtn" title="Celebrate!">
+    <span style="font-size:18px">🎉</span>Team EKL!
+  </button>
+
+<script>
+/* ---------- Confetti ---------- */
+const confettiBtn = document.getElementById('confettiBtn');
+confettiBtn.addEventListener('click', burstConfetti);
+
+const confettiCanvas = document.getElementById('confetti');
+const sparkleCanvas  = document.getElementById('sparkles');
+const ctx = confettiCanvas.getContext('2d');
+const sctx = sparkleCanvas.getContext('2d');
+
+function sizeCanvases(){
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  [confettiCanvas, sparkleCanvas].forEach(c=>{
+    c.width  = Math.floor(innerWidth * dpr);
+    c.height = Math.floor(innerHeight * dpr);
+    const g = c.getContext('2d');
+    g.setTransform(dpr,0,0,dpr,0,0);
+  });
+}
+sizeCanvases();
+addEventListener('resize', sizeCanvases);
+
+let pieces = [];
+let sparkles = [];
+function burstConfetti(){
+  const colors = ['#c37b6b', '#b8cbb8', '#d6a571', '#c9b6e4', '#ffcf9f', '#ffdbe3'];
+  const N = 180;
+  for(let i=0;i<N;i++){
+    pieces.push({ x: innerWidth/2, y: innerHeight*.25,
+      vx: (Math.random()*2-1)*6, vy: -Math.random()*10-6,
+      w: 8+Math.random()*8, h: 10+Math.random()*14,
+      r: Math.random()*Math.PI, vr: (Math.random()*2-1)*.2,
+      color: colors[(Math.random()*colors.length)|0],
+      life: 0, max: 140 + Math.random()*60
+    });
+  }
+  for(let i=0;i<60;i++){
+    sparkles.push({ x: innerWidth/2 + (Math.random()*2-1)*40, y: innerHeight*.25 + (Math.random()*2-1)*20,
+      vx:(Math.random()*2-1)*1.2, vy:(Math.random()*2-1)*1.2, life:0, max: 50+Math.random()*30 });
+  }
+  if(!animating) animate();
+}
+let animating = false;
+function animate(){
+  animating = true;
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  sctx.clearRect(0,0,innerWidth,innerHeight);
+  const wind = Math.sin(performance.now()/800)*0.15;
+  for(let i=pieces.length-1; i>=0; i--){
+    const p = pieces[i];
+    p.vx += wind * 0.05; p.vy += 0.12;
+    p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+    ctx.fillStyle = p.color; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+    ctx.globalAlpha = (Math.sin(p.life*.3)+1)/2 * .8 + .2; ctx.fillStyle = 'white';
+    ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
+    if(p.y > innerHeight + 80 || p.life > p.max) pieces.splice(i,1);
+  }
+  sctx.save(); sctx.globalCompositeOperation = 'lighter';
+  for(let i=sparkles.length-1;i>=0;i--){
+    const sp = sparkles[i]; sp.x += sp.vx; sp.y += sp.vy; sp.life++;
+    const alpha = 1 - sp.life/sp.max;
+    sctx.fillStyle = `rgba(255, 220, 160, ${alpha})`;
+    sctx.beginPath(); sctx.arc(sp.x, sp.y, 2.5, 0, Math.PI*2); sctx.fill();
+    if(sp.life > sp.max) sparkles.splice(i,1);
+  }
+  sctx.restore();
+  if(pieces.length || sparkles.length){ requestAnimationFrame(animate); } else { animating = false; }
+}
+
+/* ---------- Gallery via flyers/index.json ---------- */
+const FLYER_DIR = "flyers/";
+const INDEX_URL = FLYER_DIR + "index.json";
+
+const meta   = document.getElementById('flyerMeta');
+const img    = document.getElementById('flyerImg');
+const open   = document.getElementById('openImg');
+const prev   = document.getElementById('prevBtn');
+const next   = document.getElementById('nextBtn');
+const dotsEl = document.getElementById('dots');
+const viewerArea = document.getElementById('viewerArea');
+
+let flyers = [];  // {file,label,num}
+let flyerIndex = 0;
+
+function parseNumericBase(name){
+  const base = name.replace(/\.png$/i,'');
+  if (!/^\d+$/.test(base)) return NaN;
+  return parseInt(base, 10);
+}
+
+
+function sortFlyers(list){
+  return list.sort((a,b)=>{
+    const an=a.num, bn=b.num;
+    const aOk=Number.isFinite(an), bOk=Number.isFinite(bn);
+
+    // numeric first, ascending
+    if (aOk && bOk) return an-bn;
+    if (aOk && !bOk) return -1;
+    if (!aOk && bOk) return 1;
+
+    return a.file.localeCompare(b.file);
+  });
+}
+
+function buildDots(){
+  dotsEl.innerHTML = "";
+  flyers.forEach((_, i)=>{
+    const d = document.createElement('button');
+    d.type = "button";
+    d.className = "dot";
+    d.addEventListener("click", ()=> setFlyer(i));
+    dotsEl.appendChild(d);
+  });
+}
+
+function updateDots(){
+  Array.from(dotsEl.querySelectorAll('.dot'))
+    .forEach((d,i)=> d.classList.toggle('active', i === flyerIndex));
+}
+
+function setFlyer(i){
+  if(!flyers.length) return;
+  flyerIndex = (i + flyers.length) % flyers.length;
+  const f = flyers[flyerIndex];
+
+  img.src = f.file;
+  img.alt = "Flyer";
+  open.href = f.file; 
+
+  meta.textContent = ``; 
+  prev.disabled = flyers.length <= 1;
+  next.disabled = flyers.length <= 1;
+
+  updateDots();
+}
+
+function showError(msg){
+  viewerArea.innerHTML = `<div class="error">${msg}</div>`;
+  meta.textContent = "Couldn’t load flyers";
+  prev.disabled = true;
+  next.disabled = true;
+  open.href = "#";
+  dotsEl.innerHTML = "";
+}
+
+prev.addEventListener('click', ()=> setFlyer(flyerIndex - 1));
+next.addEventListener('click', ()=> setFlyer(flyerIndex + 1));
+document.addEventListener('keydown', (e)=>{
+  if (e.key === "ArrowLeft") setFlyer(flyerIndex - 1);
+  if (e.key === "ArrowRight") setFlyer(flyerIndex + 1);
+});
+
+async function initGallery(){
+  try{
+    const res = await fetch(INDEX_URL, { cache: "no-store" });
+    if(!res.ok) throw new Error(`Failed to fetch ${INDEX_URL} (${res.status})`);
+    const data = await res.json();
+
+    if(!data || !Array.isArray(data.flyers) || data.flyers.length === 0){
+      showError(`Your <b>${INDEX_URL}</b> exists, but it contains no flyers.`);
+      return;
+    }
+
+    flyers = data.flyers
+      .filter(x => typeof x === "string" && x.trim())
+      .map(name => name.trim())
+      .filter(name => /\.png$/i.test(name))
+      .filter(name => /^\d+\.png$/i.test(name))
+      .map(name => {
+        const num = parseNumericBase(name);
+        return { file: FLYER_DIR + name, label: "", num };
+      });
+
+    flyers = sortFlyers(flyers);
+
+    buildDots();
+
+    // Start on latest = highest number = rightmost dot
+    setFlyer(flyers.length - 1);
+
+  }catch(err){
+    console.error(err);
+    showError(
+      `Couldn’t load <b>${INDEX_URL}</b>.<br><br>
+       On GitHub Pages you must provide it. Example:<br>
+       <code>{"flyers":["1.png","2.png","3.png"]}</code>`
+    );
+  }
+}
+
+initGallery();
+</script>
+</body>
+</html>
